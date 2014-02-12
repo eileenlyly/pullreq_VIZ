@@ -1,44 +1,34 @@
 function initialize() {
 
-    totalContributions=0;
+    userCommits=0;
     renderLinks=[];
-    cands=[];
-    pacs=[];
+    pulls=[];
     contr=[];
 
         var root={};
-        var d={};
-        //d.value=total_hDems+total_hReps;
-        //d.children=h_dems;
-
         var r={};
-        r.value=total_hReps;
-        r.children=h_reps;
-
-        var o={};
-        o.value=total_hOthers;
-        o.children=h_others;
+        r.value=total_ins+total_outs;
+        r.children=pullreqs;
 
         root.children=[r];
-        root.PTY="root";
+        root.CAT="root";
 
         nodes=bubble.nodes(root);
 
-        var totalCandAmount=0;
+        var totalPullAmount=0;
         nodes.forEach (function (d) {
             if (d.depth==2) {
-                nodesById[d.CAND_ID]=d;
+                nodesById[d.PQID]=d;
                 d.relatedLinks=[];
-                d.Amount=Number(d.Amount);
-                d.currentAmount= d.Amount;
-                cands.push(d);
-                totalCandAmount+= d.Amount;
+                d.CMT=Number(d.CMT);
+                d.currentCMT= d.CMT;
+                pulls.push(d);
+                totalPullAmount+= d.CMT;
             }
         })
 
-        log("totalCandAmount=" + totalCandAmount);
-        pacs=pacsHouse;
-        c_house.forEach(function (d) {
+        log("totalPullAmount=" + totalPullAmount);
+        commits.forEach(function (d) {
             contr.push(d);
         });
 
@@ -46,12 +36,12 @@ function initialize() {
 
     var totalContr=0;
     contr.forEach(function (d) {
-        nodesById[d.CAND_ID].relatedLinks.push(d);
-        chordsById[d.CMTE_ID].relatedLinks.push(d);
-        totalContr+= Number(d.TRANSACTION_AMT);
+        nodesById[d.PQID].relatedLinks.push(d);
+        chordsById[d.UID].relatedLinks.push(d);
+        totalContr+= Number(d.CMT_AMT);
     })
 
-    log("totalContributions=" + totalContr);
+    log("userCommits=" + totalContr);
 
 
     log("initialize()");

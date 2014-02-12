@@ -1,21 +1,21 @@
 
 function node_onMouseOver(d,type) {
-    if (type=="CAND") {
+    if (type=="PULL") {
         if(d.depth < 2) return;
         toolTip.transition()
             .duration(200)
             .style("opacity", ".9");
 
-        header1.text("Congress");
-        header.text(d.CAND_NAME);
-        header2.text("Total Recieved: " + formatCurrency(Number(d.Amount)));
+        header1.text("Pull Requested by");
+        header.text(d.UNM);
+        header2.text("Total Commits: " + Number(d.CMT));
         toolTip.style("right",  "100px")
-            .style("top", (d3.event.pageY-75) + "px")
-            .style("height","100px");
+            .style("top", 200 + "px")
+            .style("height","80px");
 
         highlightLinks(d,true);
     }
-    else if (type=="CONTRIBUTION") {
+    else if (type=="CMT") {
 
         /*
         Highlight chord stroke
@@ -24,40 +24,40 @@ function node_onMouseOver(d,type) {
             .duration(200)
             .style("opacity", ".9");
 
-        header1.text(pacsById[office + "_" + d.CMTE_ID].CMTE_NM);
-        header.text(d.CAND_NAME);
-        header2.text(formatCurrency(Number(d.TRANSACTION_AMT)) + " on " + d.Month + "/" + d.Day + "/" + d.Year);
+        header1.text(userByID[d.UID].UNM);
+        header.text(Number(d.CMT_AMT) + "  commit");
+        header2.text("on " + d.Month + "/" + d.Day + "/" + d.Year);
         toolTip.style("right", "100px")
-            .style("top", (d3.event.pageY-75) + "px")
+            .style("top", 200 + "px")
             .style("height","100px");
         highlightLink(d,true);
     }
-    else if (type=="PAC") {
+    else if (type=="USER") {
         /*
-        highlight all contributions and all candidates
+        highlight all commits and all pulls
          */
         toolTip.transition()
             .duration(200)
             .style("opacity", ".9");
 
-        header1.text("Political Action Committee");
-        header.text(pacsById[office + "_" + d.label].CMTE_NM);
-        header2.text("Total Contributions: " + formatCurrency(pacsById[office + "_" + d.label].Amount));
+        header1.text("User");
+        header.text(userByID[d.label].UNM);
+        header2.text("Total Commits: " + userByID[d.label].CMT);
         toolTip.style("right", "100px")
-            .style("top", (d3.event.pageY-75) + "px")
+            .style("top", 200 + "px")
             .style("height","110px");
         highlightLinks(chordsById[d.label],true);
     }
 }
 
 function node_onMouseOut(d,type) {
-    if (type=="CAND") {
+    if (type=="PULL") {
         highlightLinks(d,false);
     }
-    else if (type=="CONTRIBUTION") {
+    else if (type=="CMT") {
         highlightLink(d,false);
     }
-    else if (type=="PAC") {
+    else if (type=="USER") {
         highlightLinks(chordsById[d.label],false);
     }
 
@@ -70,7 +70,7 @@ function node_onMouseOut(d,type) {
 
 function highlightLink(g,on) {
 
-    var opacity=((on==true) ? .6 : .1);
+    var opacity=((on==true) ? 1 : .1);
 
       // console.log("fadeHandler(" + opacity + ")");
       // highlightSvg.style("opacity",opacity);
@@ -83,16 +83,16 @@ function highlightLink(g,on) {
         var arc=d3.select(document.getElementById("a_" + g.Key));
         arc.transition().style("fill-opacity",(on==true) ? opacity :.2);
 
-        var circ=d3.select(document.getElementById("c_" + g.CAND_ID));
+        var circ=d3.select(document.getElementById("c_" + g.PQID));
         circ.transition((on==true) ? 150:550)
-        .style("opacity",((on==true) ?0.5 :0));
+        .style("opacity",((on==true) ?1 :0));
         //.style("fill",((on==true) ? "#A8A8A8" : "#777"));
 
-        var text=d3.select(document.getElementById("t_" + g.CMTE_ID));
+        var text=d3.select(document.getElementById("t_" + g.UID));
          text.transition((on==true) ? 0:550)
              .style("fill",(on==true) ? "#000" : "#777")
              .style("font-size",(on==true) ? "12px" : "8px")
-             .style("stroke-width",((on==true) ? 2 : 0));
+             .style("stroke-width",((on==true) ? 3 : 0));
 
 
 }
@@ -104,25 +104,3 @@ function highlightLinks(d,on) {
     })
 
 }
-
-
-senateButton.on("click",function (d) {
-
-    senateButton.attr("class","selected");
-    houseButton.attr("class",null);
-    office="senate";
-    linksSvg.selectAll("g.links").remove();
-    clearInterval(intervalId);
-    main();
-
-});
-
-houseButton.on("click",function (d) {
-//    linkGroup.selectAll("g.links").remove();
-    senateButton.attr("class",null);
-    houseButton.attr("class","selected");
-    office="house";
-//    linksSvg.selectAll("g.links").remove();
-    clearInterval(intervalId);
-    main();
-});

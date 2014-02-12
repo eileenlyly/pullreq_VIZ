@@ -17,24 +17,23 @@ function updateLinks(links) {
         .attr("class", "arc")
         .append("path")
         .attr("id",function (d) { return "a_" + d.Key;})
-        .style("fill", function(d) { return (d.PTY=="DEM") ? demColor : (d.PTY=="REP") ? repColor : otherColor; })
+        .style("fill", function(d) { return (d.CAT=="DEM") ? demColor : (d.CAT=="REP") ? repColor : otherColor; })
         .style("fill-opacity",.2)
         .attr("d", function (d,i) {
             var newArc={};
-            var relatedChord=chordsById[d.CMTE_ID];
-           // console.log("CMTE_ID=" + d.CMTE_ID);
+            var relatedChord=chordsById[d.UID];
             newArc.startAngle=relatedChord.currentAngle;
-            relatedChord.currentAngle=relatedChord.currentAngle+(Number(d.TRANSACTION_AMT)/relatedChord.value)*(relatedChord.endAngle-relatedChord.startAngle);
+            relatedChord.currentAngle=relatedChord.currentAngle+(Number(d.CMT_AMT)/relatedChord.value)*(relatedChord.endAngle-relatedChord.startAngle);
             newArc.endAngle=relatedChord.currentAngle;
-            newArc.value= Number(d.TRANSACTION_AMT);
+            newArc.value= Number(d.CMT_AMT);
             var arc=d3.svg.arc(d,i).innerRadius(linkRadius).outerRadius(innerRadius);
-            totalContributions+=newArc.value;
-            total.text(formatCurrency(totalContributions));
+            userCommits+=newArc.value;
+            total.text(userCommits + " commits");
 
             return arc(newArc,i);
         })
-        .on("mouseover", function (d) { node_onMouseOver(d,"CONTRIBUTION");})
-        .on("mouseout", function (d) {node_onMouseOut(d,"CONTRIBUTION"); });
+        .on("mouseover", function (d) { node_onMouseOver(d,"CMT");})
+        .on("mouseout", function (d) {node_onMouseOut(d,"CMT"); });
 
     /* LINKS */
      enter.append("path")
@@ -48,27 +47,27 @@ function updateLinks(links) {
 
               return diag;
         })
-        .style("stroke",function(d) { return (d.PTY=="DEM") ? demColor : (d.PTY=="REP") ? repColor : otherColor; })
+        .style("stroke",function(d) { return (d.CAT=="DEM") ? demColor : (d.CAT=="REP") ? repColor : otherColor; })
         .style("stroke-opacity",.07)
        // .style("stroke-width",function (d) { return d.links[0].strokeWeight;})
         .style("fill-opacity",0.1)
-        .style("fill",function(d) { return (d.PTY=="DEM") ? demColor : (d.PTY=="REP") ? repColor : otherColor; })
-        .on("mouseover", function (d) { node_onMouseOver(d,"CONTRIBUTION");})
-        .on("mouseout", function (d) {node_onMouseOut(d,"CONTRIBUTION"); });
+        .style("fill",function(d) { return (d.CAT=="DEM") ? demColor : (d.CAT=="REP") ? repColor : otherColor; })
+        .on("mouseover", function (d) { node_onMouseOver(d,"CMT");})
+        .on("mouseout", function (d) {node_onMouseOut(d,"CMT"); });
 
 
         /* NODES */
      enter.append("g")
         .attr("class","node")
         .append("circle")
-        .style("fill",function(d) { return (d.PTY=="DEM") ? demColor : (d.PTY=="REP") ? repColor : otherColor; })
+        .style("fill",function(d) { return (d.CAT=="DEM") ? demColor : (d.CAT=="REP") ? repColor : otherColor; })
         .style("fill-opacity",0.2)
         .style("stroke-opacity",1)
         .attr("r", function (d) {
-            var relatedNode=nodesById[d.CAND_ID];
+            var relatedNode=nodesById[d.PQID];
             //Decrement Related Node
-            relatedNode.currentAmount=relatedNode.currentAmount-Number(d.TRANSACTION_AMT);
-            var ratio=((relatedNode.Amount-relatedNode.currentAmount)/relatedNode.Amount);
+            relatedNode.currentCMT=relatedNode.currentCMT-Number(d.CMT_AMT);
+            var ratio=((relatedNode.CMT-relatedNode.currentCMT)/relatedNode.CMT);
             return relatedNode.r*ratio;
         })
         .attr("transform", function (d,i) {
@@ -86,14 +85,14 @@ function updateLinks(links) {
         var link2={};
         var source2={};
 
-        var relatedChord=chordsById[d.CMTE_ID];
-        var relatedNode=nodesById[d.CAND_ID];
+        var relatedChord=chordsById[d.UID];
+        var relatedNode=nodesById[d.PQID];
         var r=linkRadius;
         var currX=(r * Math.cos(relatedChord.currentLinkAngle-1.57079633));
         var currY=(r * Math.sin(relatedChord.currentLinkAngle-1.57079633));
 
         var a=relatedChord.currentLinkAngle-1.57079633; //-90 degrees
-        relatedChord.currentLinkAngle=relatedChord.currentLinkAngle+(Number(d.TRANSACTION_AMT)/relatedChord.value)*(relatedChord.endAngle-relatedChord.startAngle);
+        relatedChord.currentLinkAngle=relatedChord.currentLinkAngle+(Number(d.CMT_AMT)/relatedChord.value)*(relatedChord.endAngle-relatedChord.startAngle);
         var a1=relatedChord.currentLinkAngle-1.57079633;
 
         source.x=(r * Math.cos(a));
@@ -120,8 +119,8 @@ function updateLinks(links) {
 function updateNodes() {
 
     var node = nodesSvg.selectAll("g.node")
-        .data(cands, function (d,i) {
-            return d.CAND_ID;
+        .data(pulls, function (d,i) {
+            return d.PQID;
         });
 
 
@@ -135,17 +134,17 @@ function updateNodes() {
         .attr("r", function(d) { return d.r; })
         .style("fill-opacity", function (d) { return (d.depth < 2) ? 0 : 0.05})
         .style("stroke",function(d) {
-            return ((d.PTY=='DEM') ? demColor : (d.PTY=="REP") ? repColor : otherColor);
+            return ((d.CAT=='DEM') ? demColor : repColor);
         })
         .style("stroke-opacity", function (d) { return (d.depth < 2) ? 0 : 0.2})
         .style("fill", function(d) {
-            return ((d.PTY=='DEM') ? demColor : (d.PTY=="REP") ? repColor : otherColor);
+            return ((d.CAT=='DEM') ? demColor : repColor);
         });
 
 
 
     var g=enter.append("g")
-        .attr("id", function(d) { return "c_" + d.CAND_ID; })
+        .attr("id", function(d) { return "c_" + d.PQID; })
         .style("opacity",0);
 
         g.append("circle")
@@ -158,11 +157,11 @@ function updateNodes() {
         g.append("circle")
         .attr("r", function(d) { return d.r; })
         .style("fill-opacity", 0)
-        .style("stroke", "#000")
-        .style("stroke-width",1.5)
+        .style("stroke", "#FFFF66")
+        .style("stroke-width",3)
         .style("stroke-opacity",1)
-        .on("mouseover", function (d) { node_onMouseOver(d,"CAND"); })
-        .on("mouseout", function (d) {node_onMouseOut(d,"CAND"); });
+        .on("mouseover", function (d) { node_onMouseOver(d,"PULL"); })
+        .on("mouseout", function (d) {node_onMouseOut(d,"PULL"); });
 
 
     node.exit().remove().transition(500).style("opacity",0);
@@ -190,9 +189,9 @@ function updateChords() {
                 + "translate(" + (innerRadius + 6) + ")"
                 + (d.angle > Math.PI ? "rotate(180)" : "");
         })
-        .text(function(d) { return trimLabel(pacsById[office + "_" + d.label].CMTE_NM); })
-        .on("mouseover", function (d) { node_onMouseOver(d,"PAC");})
-        .on("mouseout", function (d) {node_onMouseOut(d,"PAC"); });
+        .text(function(d) { return trimLabel(userByID[d.label].UNM); })
+        .on("mouseover", function (d) { node_onMouseOver(d,"USER");})
+        .on("mouseout", function (d) {node_onMouseOut(d,"USER"); });
 
     arcGroup.transition()
         .select("text")
@@ -205,7 +204,7 @@ function updateChords() {
                 + (d.angle > Math.PI ? "rotate(180)" : "");
         })
         .style("fill", "#777")
-        .text(function(d) { return trimLabel(pacsById[office + "_" + d.label].CMTE_NM); });
+        .text(function(d) { return trimLabel(userByID[d.label].UNM); });
 
 
 

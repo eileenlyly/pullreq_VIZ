@@ -5,54 +5,48 @@ var numCalls=0;
 
 function fetchData() {
     dataCalls=[];
-//    dataDispatch.on("end",onDataFetched)
-    addStream("data/Candidates_House.csv", onFetchCandidatesHouse);
-    addStream("data/Contributions_House.csv", onFetchContributionsHouse);
-    addStream("data/users.csv", onFetchPacsHouse);
+    addStream("data/pullreqs.csv", onFetchPullreqs);
+    addStream("data/commits.csv", onFetchCommits);
+    addStream("data/users.csv", onFetchUsers);
     startFetch();
 }
 
 
-function onFetchCandidatesHouse(csv) {
+function onFetchPullreqs(csv) {
     for (var i=0; i < csv.length; i++) {
         var r=csv[i];
-        r.value=Number(r.Amount);
-        cns[r.CAND_ID]=r;
-        house.push(r);
-        if (1) {
-            h_reps.push(r);
-            total_hReps+= r.value;
-        }
-        //else if (r.PTY=="DEM") {
-            h_dems.push(r)
-            total_hDems+= r.value;
-        //}
+        r.value=Number(r.CMT);
+        cns[r.PQID]=r;
+        pullreqs.push(r);
+        if(r.CAT=="REP")
+            total_ins+= r.value;
+        else
+            total_outs+= r.value;
     }
-    log("onFetchCandidatesHouse()");
+    log("onFetchPullreqs()");
     endFetch();
 }
 
-function onFetchContributionsHouse(csv) {
+function onFetchCommits(csv) {
     var i=0;
     csv.forEach(function (d) {
         d.Key="H"+(i++);
-        contributions.push(d);
-        c_house.push(d);
+        commits.push(d);
     });
 
-    log("onFetchContributionsHouse()");
+    log("onFetchCommits()");
     endFetch();
 
 }
 
-function onFetchPacsHouse(csv) {
+function onFetchUsers(csv) {
 
-    pacsHouse=csv;
-    for (var i=0; i < pacsHouse.length; i++) {
-        pacsById["house_" + pacsHouse[i].CMTE_ID]=pacsHouse[i];
+    users=csv;
+    for (var i=0; i < users.length; i++) {
+        userByID[users[i].UID]=users[i];
     }
 
-    log("onFetchPacsHouse()");
+    log("onFetchUser()");
     endFetch();
 
 }

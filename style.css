@@ -23,7 +23,7 @@ body {
     position:absolute;
     top:10px;
     right:10px;
-    margin-right:0px;
+    margin-right:10px;
 }
 
 rect {
@@ -82,13 +82,11 @@ div.toolTipBody {
 }
 
 div.header {
-    text-transform: uppercase;
     text-align: left;
     font-size: 14px;
     margin-bottom: 2px;
     color:#666;
     text-align:center;
-
 }
 
 div.header-rule{

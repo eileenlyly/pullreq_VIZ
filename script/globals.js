@@ -1,27 +1,29 @@
 
-var maxWidth=Math.max(600,Math.min(screen.height,screen.width)-450);
+var maxWidth=screen.width-120;
 
-var outerRadius = maxWidth / 2,
-    innerRadius = outerRadius - 120,
-    bubbleRadius=innerRadius-50,
+var outerRadius = screen.height/2 - 100,
+    innerRadius = outerRadius - 30,
+    bubbleRadius=innerRadius,
     linkRadius=innerRadius-20,
-    nodesTranslate=(outerRadius-innerRadius) + (innerRadius-bubbleRadius) + 100,
-    chordsTranslate=(outerRadius + 100);
+    nodesTranslate=(outerRadius-innerRadius) + (innerRadius-bubbleRadius) ,
+    chordsTranslate=outerRadius;
 
 d3.select(document.getElementById("mainDiv"))
-    .style("width",(outerRadius*2 + 400) + "px")
-    .style("height",(outerRadius*2 + 400) + "px");
+    .style("width",(maxWidth) + "px");
+    //.style("height",(outerRadius*2 + 400) + "px");
 
 d3.select(document.getElementById("bpg"))
-    .style("width",(outerRadius*2 + 400) + "px");
+    .style("width",(maxWidth) + "px");
 
 var svg = d3.select(document.getElementById("svgDiv"))
-    .style("width", (outerRadius*2 + 200) + "px")
-    .style("height", (outerRadius*2 + 200) + "px")
+    //.style("width", (outerRadius*2 + 200) + "px")
+    //.style("height", (outerRadius*2 + 200) + "px")
     .append("svg")
     .attr("id","svg")
-    .style("width", (outerRadius*2 + 200) + "px")
-    .style("height", (outerRadius*2 + 200) + "px");
+    .style("float", "left")
+    .style("margin-left", "20px")
+    .style("width", (outerRadius*2) + 100 + "px")
+    .style("height", (outerRadius*2) + 100 + "px");
 
 
 
@@ -76,39 +78,20 @@ var header2 = d3.select(document.getElementById("header2"));
 var total = d3.select(document.getElementById("totalDiv"));
 var repColor="#CC99FF";
 var demColor="#33CC66";
-var otherColor="#FFa400";
 
 var fills= d3.scale.ordinal().range(["#00AC6B","#20815D","#007046","#35D699","#60D6A9"]);
-
-var office="house";
 
 var linkGroup;
 
 var cns=[],
-    cands=[],
-    pacs=[],
-    pacsHouse=[],
-    pacsSentate=[],
+    users=[],
+    commits=[];
+    pulls=[],
     contr=[],
-    h_dems=[],
-    h_reps=[],
-    h_others=[],
-    house=[];
-    s_dems=[],
-    s_reps=[],
-    s_others=[],
-    senate=[],
-    total_hDems=0,
-    total_sDems=0,
-    total_hReps=0,
-    total_sReps=0,
-    total_hOthers=0,
-    total_sOthers=0,
-    contributions=[],
-    c_senate=[];
-    c_house=[];
-    pacs=[],
-    pacsById={},
+    pullreqs=[],
+    total_outs=0,
+    total_ins=0,
+    userByID={},
     chordsById={},
     nodesById={},
     chordCount=20,
@@ -117,20 +100,14 @@ var cns=[],
     nodes=[],
     renderLinks=[],
     colorByName={},
-    totalContributions=0,
+    userCommits=0,
     delay=2;
 
-
-
-var formatNumber = d3.format(",.0f"),
-    formatCurrency = function(d) { return "$" + formatNumber(d)};
-
-   var buf_indexByName={},
+var buf_indexByName={},
     indexByName = {},
     nameByIndex = {},
     labels = [],
     chords = [];
-
 
 function log(message) {
    // console.log(message);
