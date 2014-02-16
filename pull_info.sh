@@ -72,7 +72,21 @@ from
          $2_all_commits, users
 where    $2_all_commits.UID = users.id" |$MYSQL 
 
- 
+#create first table 
+echo "create table $2_pq_all
+select PQID, count(CMT_AMT) as CMT, UNM, CAT from home_au_all 
+group by PQID"|$MYSQL
+
+#create second table
+echo "create table $2_usr_all
+select UID, UNM, count(CMT_AMT) as CMT from home_au_all 
+group by UID"|$MYSQL
+
+
+
+
+
+
 #create pull_request commit table
 #echo "drop table $pull_commits;"|$MYSQL
 #echo "create table $pull_commits as (select pull_requests.*, pull_request_commits.* from msr14.pull_requests, msr14.pull_request_commits 
