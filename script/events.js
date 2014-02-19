@@ -4,7 +4,7 @@ function node_onMouseOver(d,type) {
         if(d.depth < 2) return;
         toolTip.transition()
             .duration(200)
-            .style("opacity", ".9");
+            .style("opacity", ".6");
 
         header1.text("Pull Requested by");
         header.text(d.UNM);
@@ -22,7 +22,7 @@ function node_onMouseOver(d,type) {
          */
         toolTip.transition()
             .duration(200)
-            .style("opacity", ".9");
+            .style("opacity", ".6");
 
         header1.text(userByID[d.UID].UNM);
         header.text(Number(d.CMT_AMT) + "  commit");
@@ -38,7 +38,7 @@ function node_onMouseOver(d,type) {
          */
         toolTip.transition()
             .duration(200)
-            .style("opacity", ".9");
+            .style("opacity", ".6");
 
         header1.text("User");
         header.text(userByID[d.label].UNM);
@@ -70,13 +70,10 @@ function node_onMouseOut(d,type) {
 
 function highlightLink(g,on) {
 
-    var opacity=((on==true) ? 1 : .1);
-
-      // console.log("fadeHandler(" + opacity + ")");
-      // highlightSvg.style("opacity",opacity);
+    var opacity=((on==true) ? 0.4 : .1);
 
        var link=d3.select(document.getElementById("l_" + g.Key));
-        link.transition((on==true) ? 150:550)
+        link.transition((on==true) ? 15:55)
             .style("fill-opacity",opacity)
             .style("stroke-opacity",opacity);
 
@@ -84,15 +81,14 @@ function highlightLink(g,on) {
         arc.transition().style("fill-opacity",(on==true) ? opacity :.2);
 
         var circ=d3.select(document.getElementById("c_" + g.PQID));
-        circ.transition((on==true) ? 150:550)
+        circ.transition((on==true) ? 15:55)
         .style("opacity",((on==true) ?1 :0));
-        //.style("fill",((on==true) ? "#A8A8A8" : "#777"));
 
         var text=d3.select(document.getElementById("t_" + g.UID));
-         text.transition((on==true) ? 0:550)
+         text.transition((on==true) ? 0:55)
              .style("fill",(on==true) ? "#000" : "#777")
              .style("font-size",(on==true) ? "12px" : "8px")
-             .style("stroke-width",((on==true) ? 3 : 0));
+             .style("stroke-width",((on==true) ? 2 : 0));
 
 
 }

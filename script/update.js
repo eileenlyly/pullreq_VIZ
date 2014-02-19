@@ -17,7 +17,7 @@ function updateLinks(links) {
         .attr("class", "arc")
         .append("path")
         .attr("id",function (d) { return "a_" + d.Key;})
-        .style("fill", function(d) { return (d.CAT=="DEM") ? demColor : (d.CAT=="REP") ? repColor : otherColor; })
+        .style("fill", function(d) { return (d.CAT=="I") ? demColor : (d.CAT=="O") ? repColor : otherColor; })
         .style("fill-opacity",.2)
         .attr("d", function (d,i) {
             var newArc={};
@@ -47,11 +47,11 @@ function updateLinks(links) {
 
               return diag;
         })
-        .style("stroke",function(d) { return (d.CAT=="DEM") ? demColor : (d.CAT=="REP") ? repColor : otherColor; })
+        .style("stroke",function(d) { return (d.CAT=="I") ? demColor : (d.CAT=="O") ? repColor : otherColor; })
         .style("stroke-opacity",.07)
        // .style("stroke-width",function (d) { return d.links[0].strokeWeight;})
-        .style("fill-opacity",0.1)
-        .style("fill",function(d) { return (d.CAT=="DEM") ? demColor : (d.CAT=="REP") ? repColor : otherColor; })
+        .style("fill-opacity",0.07)
+        .style("fill",function(d) { return (d.CAT=="I") ? demColor : (d.CAT=="O") ? repColor : otherColor; })
         .on("mouseover", function (d) { node_onMouseOver(d,"CMT");})
         .on("mouseout", function (d) {node_onMouseOut(d,"CMT"); });
 
@@ -60,9 +60,9 @@ function updateLinks(links) {
      enter.append("g")
         .attr("class","node")
         .append("circle")
-        .style("fill",function(d) { return (d.CAT=="DEM") ? demColor : (d.CAT=="REP") ? repColor : otherColor; })
-        .style("fill-opacity",0.2)
-        .style("stroke-opacity",1)
+        .style("fill",function(d) { return (d.CAT=="I") ? demColor : (d.CAT=="O") ? repColor : otherColor; })
+        .style("fill-opacity",0.1)
+        .style("stroke-opacity",0.1)
         .attr("r", function (d) {
             var relatedNode=nodesById[d.PQID];
             //Decrement Related Node
@@ -134,11 +134,11 @@ function updateNodes() {
         .attr("r", function(d) { return d.r; })
         .style("fill-opacity", function (d) { return (d.depth < 2) ? 0 : 0.05})
         .style("stroke",function(d) {
-            return ((d.CAT=='DEM') ? demColor : repColor);
+            return ((d.CAT=='I') ? demColor : repColor);
         })
         .style("stroke-opacity", function (d) { return (d.depth < 2) ? 0 : 0.2})
         .style("fill", function(d) {
-            return ((d.CAT=='DEM') ? demColor : repColor);
+            return ((d.CAT=='I') ? demColor : repColor);
         });
 
 
@@ -151,15 +151,15 @@ function updateNodes() {
         .attr("r", function(d) { return d.r+2; })
         .style("fill-opacity", 0)
         .style("stroke", "#FFF")
-        .style("stroke-width",2.5)
-        .style("stroke-opacity",.7);
+        .style("stroke-width",1)
+        .style("stroke-opacity",.1);
 
         g.append("circle")
         .attr("r", function(d) { return d.r; })
         .style("fill-opacity", 0)
         .style("stroke", "#FFFF66")
-        .style("stroke-width",3)
-        .style("stroke-opacity",1)
+        .style("stroke-width",1)
+        .style("stroke-opacity",0.7)
         .on("mouseover", function (d) { node_onMouseOver(d,"PULL"); })
         .on("mouseout", function (d) {node_onMouseOut(d,"PULL"); });
 

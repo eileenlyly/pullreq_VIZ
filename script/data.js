@@ -5,9 +5,10 @@ var numCalls=0;
 
 function fetchData() {
     dataCalls=[];
-    addStream("data/pullreqs.csv", onFetchPullreqs);
-    addStream("data/commits.csv", onFetchCommits);
-    addStream("data/users.csv", onFetchUsers);
+    var pj = "data/akka";
+    addStream(pj+"/pullreqs.csv", onFetchPullreqs);
+    addStream(pj+"/commits.csv", onFetchCommits);
+    addStream(pj+"/users.csv", onFetchUsers);
     startFetch();
 }
 
@@ -18,10 +19,10 @@ function onFetchPullreqs(csv) {
         r.value=Number(r.CMT);
         cns[r.PQID]=r;
         pullreqs.push(r);
-        if(r.CAT=="REP")
-            total_ins+= r.value;
-        else
+        if(r.CAT=="O")
             total_outs+= r.value;
+        else
+            total_ins+= r.value;
     }
     log("onFetchPullreqs()");
     endFetch();
@@ -30,7 +31,7 @@ function onFetchPullreqs(csv) {
 function onFetchCommits(csv) {
     var i=0;
     csv.forEach(function (d) {
-        d.Key="H"+(i++);
+        d.Key=i++;
         commits.push(d);
     });
 

@@ -2,11 +2,11 @@
 var maxWidth=screen.width-120;
 
 var outerRadius = screen.height/2 - 100,
-    innerRadius = outerRadius - 30,
-    bubbleRadius=innerRadius,
+    innerRadius = outerRadius - 40,
+    bubbleRadius=innerRadius - 150,
     linkRadius=innerRadius-20,
-    nodesTranslate=(outerRadius-innerRadius) + (innerRadius-bubbleRadius) ,
-    chordsTranslate=outerRadius;
+    nodesTranslate=(outerRadius-bubbleRadius) +50,
+    chordsTranslate=outerRadius+50;
 
 d3.select(document.getElementById("mainDiv"))
     .style("width",(maxWidth) + "px");

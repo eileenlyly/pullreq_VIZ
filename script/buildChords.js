@@ -48,7 +48,7 @@ function buildChords() {
             for (var i = -1; ++i < n;) row[i] = 0;
         }
         row[indexByName[d.UID]]= Number(d.CMT);
-        totalPacAmount+=Number(d.CMT);
+        totalPacAmount+= Number(d.CMT);
     });
 
     console.log("totalPacAmount=" + totalPacAmount)
