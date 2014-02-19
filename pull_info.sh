@@ -5,7 +5,7 @@ if [ -z $1 ] || [ -z $2 ]; then
     exit 1
 fi
 
-MYSQL="mysql -s -u msr14 -D msr14 -p"" -h localhost"
+MYSQL="mysql -u root -D msr14 -h localhost"
 
 
 echo "repo_id: $1 , repo_name: $2 "
